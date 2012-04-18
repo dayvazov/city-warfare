@@ -48,8 +48,32 @@ public class MainGame : RootObject {
 		NextTurn();
 	}
 	
+	public bool someoneIsAlive
+	{
+		get
+		{
+			bool bAnyoneLeft = false;
+			foreach(Tank tank in tanks)
+			{
+				if ( tank != null )
+				{
+					bAnyoneLeft = true;
+					break;
+				}
+			}
+			
+			return bAnyoneLeft;
+		}
+	}
+			
+			
+	
 	public void NextTurn()
 	{
+		
+		if ( !someoneIsAlive )
+			return;
+		
 		m_WaitingForTurn = true;
 		
 		EnableRigidbodies(false);
@@ -57,21 +81,32 @@ public class MainGame : RootObject {
 	
 	public void DoTurn()
 	{
-		m_Tanks[m_Turn].StartTurn();
+		if ( m_Tanks[m_Turn] != null )
+		{
+			m_Tanks[m_Turn].StartTurn();
+
+			EnableRigidbodies(true);
+		}
+		else
+		{
+			EnableRigidbodies(true);
+
+			NextTurn();
+		}
+		
 		
 		m_Turn = (m_Turn + 1) % m_Tanks.Count;
 
-		EnableRigidbodies(true);
 	}
 	
 	void OnGUI()
 	{
 		if ( m_WaitingForTurn )
 		{
-			if ( GUI.Button( new Rect (200, 200, 200, 50), "Player " + m_Turn ) )
+			if ( m_Tanks[m_Turn] == null || GUI.Button( new Rect (200, 200, 200, 50), "Player " + m_Turn ) )
 			{
-				DoTurn ();
 				m_WaitingForTurn = false;	
+				DoTurn ();
 			}
 		}
 	}

@@ -57,7 +57,6 @@ public class Turret : RootObject {
 
 	public void setAngle(float angle)
 	{
-		Debug.Log ( angle);
 		if ( float.IsNaN(angle) )
 			return;
 		

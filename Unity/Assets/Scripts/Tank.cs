@@ -4,6 +4,8 @@ using System.Collections;
 public class Tank : RootObject {
 	
 	public float m_MaxFocusTime = 5f;
+
+	public float m_Health = 200f;
 	
 	private bool m_HasFocus = false;
 	private float m_GotFocusTime = 0f;
@@ -144,6 +146,21 @@ public class Tank : RootObject {
 	{
 		m_Turrets = GetComponentsInChildren<Turret>();
 	}
-
-
+	
+	void Hit(float damage)
+	{
+		m_Health -= damage;
+		
+		if ( m_Health <= 0f )
+		{
+			if ( m_HasFocus )
+			{
+				m_HasFocus = false;
+				
+				game.NextTurn();
+			}
+			
+			Object.Destroy( gameObject );
+		}
+	}
 }

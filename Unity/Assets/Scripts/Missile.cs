@@ -21,7 +21,7 @@ public class Missile : RootObject {
 			
 			foreach (Collider c in objectsHit)
 			{
-				c.gameObject.SendMessage("Hit", m_Damage, SendMessageOptions.DontRequireReceiver);
+				c.gameObject.SendMessageUpwards("Hit", m_Damage, SendMessageOptions.DontRequireReceiver);
 			}
 			
 			Object.Destroy(gameObject);
