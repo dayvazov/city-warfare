@@ -3,10 +3,31 @@ using System.Collections;
 
 public class Missile : RootObject {
 	
+	public Object m_Explosion;
+	public float m_Radius = 30f;
+	public float m_Damage = 100f;
+	
 	private const float MAX_DEG = 180f;
+	
+	bool m_SuicidePlease = false;
 	
 	// Update is called once per frame
 	protected override void onUpdate () {
+		if ( m_SuicidePlease )
+		{
+			Object.Instantiate(m_Explosion, transform.position, Quaternion.identity);
+			
+			Collider[] objectsHit = Physics.OverlapSphere(transform.position, m_Radius);
+			
+			foreach (Collider c in objectsHit)
+			{
+				c.gameObject.SendMessage("Hit", m_Damage, SendMessageOptions.DontRequireReceiver);
+			}
+			
+			Object.Destroy(gameObject);
+			return;
+		}
+		
 		Quaternion desired = Quaternion.FromToRotation( Vector3.up, rigidbody.velocity );
 		
 		Quaternion newLocalRotation = Quaternion.RotateTowards( transform.localRotation, 
@@ -20,7 +41,7 @@ public class Missile : RootObject {
 	
 	void OnCollisionEnter( Collision info )
 	{
-		Object.Destroy( gameObject );
+		m_SuicidePlease = true;
 	}
 	
 	
