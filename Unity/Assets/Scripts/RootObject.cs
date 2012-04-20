@@ -9,6 +9,18 @@ public class RootObject : MonoBehaviour {
 	
 	public bool m_Flipped = false;
 	
+	public GameObject m_Creator;
+	
+	public static GameObject FindRoot(GameObject g)
+	{
+		while ( g.transform.parent != null )
+		{
+			g = g.transform.parent.gameObject;
+		}	
+		
+		return g;
+	}
+	
 	private MainGame _game = null;
 	public MainGame game
 	{

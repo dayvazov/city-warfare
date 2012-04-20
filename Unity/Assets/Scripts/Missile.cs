@@ -21,6 +21,9 @@ public class Missile : RootObject {
 			
 			foreach (Collider c in objectsHit)
 			{
+				if ( FindRoot(c.gameObject) == m_Creator )
+					continue;
+				
 				c.gameObject.SendMessageUpwards("Hit", m_Damage, SendMessageOptions.DontRequireReceiver);
 			}
 			
@@ -42,6 +45,18 @@ public class Missile : RootObject {
 	void OnCollisionEnter( Collision info )
 	{
 		m_SuicidePlease = true;
+	}
+	
+	void OnTriggerEnter( Collider other )
+	{
+		GameObject root = FindRoot(other.gameObject);
+		
+		Missile missile = root.GetComponent<Missile>();
+		
+		if ( missile != null && missile.m_Creator != m_Creator )
+		{
+			m_SuicidePlease = true;
+		}
 	}
 	
 	

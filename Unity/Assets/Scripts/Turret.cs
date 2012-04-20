@@ -45,7 +45,7 @@ public class Turret : RootObject {
 	
 	public void fire(float speed)
 	{
-		speed = Mathf.Clamp(speed, 4f, 40f);
+		speed = Mathf.Clamp(speed, 4f, 150f);
 			
 		GameObject missile = Object.Instantiate( 
 			m_FireType.m_Projectile, 
@@ -53,6 +53,10 @@ public class Turret : RootObject {
 			firepoint.transform.rotation ) as GameObject;		
 
 		missile.rigidbody.velocity = speed * missile.transform.TransformDirection( Vector3.up );	
+		
+		RootObject root = missile.GetComponent<RootObject>();
+		
+		root.m_Creator = FindRoot(gameObject);
 	}
 
 	public void setAngle(float angle)
